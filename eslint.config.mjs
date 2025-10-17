@@ -14,12 +14,14 @@ const eslintConfig = [
   {
     ignores: [
       "node_modules/**",
+      "lib/generated/**",
       ".next/**",
       "out/**",
       "build/**",
       "next-env.d.ts",
     ],
   },
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 
 export default eslintConfig;

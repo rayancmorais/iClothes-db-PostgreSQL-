@@ -1,5 +1,5 @@
 import sampleData from "./sample-data";
-import { PrismaClient } from "../lib/generated/prisma/index";
+import { PrismaClient } from "../lib/generated/prisma";
 async function main() {
   const prisma = new PrismaClient();
   await prisma.product.deleteMany();

@@ -9,6 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import UserButton from "./user-button";
 
 const Menu = () => {
   return (
@@ -20,12 +21,7 @@ const Menu = () => {
             <ShoppingCart /> Cart
           </Link>
         </Button>
-        <Button asChild>
-          <Link href="/sign-in">
-            <UserIcon />
-            Sign In
-          </Link>
-        </Button>
+        <UserButton />
       </nav>
       <nav className="md:hidden">
         <Sheet>
@@ -35,11 +31,7 @@ const Menu = () => {
           <SheetContent className="flex flex-col items-start">
             <SheetTitle>Menu</SheetTitle>
             <ModeToggle />
-            <Button asChild variant="ghost">
-              <Link href="/cart">
-                <ShoppingCart /> Cart
-              </Link>
-            </Button>
+            <UserButton />
             <Button asChild>
               <Link href="/sign-in">
                 <UserIcon />

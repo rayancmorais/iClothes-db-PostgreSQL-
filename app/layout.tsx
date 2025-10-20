@@ -10,7 +10,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: `%s / Prostore`,
+    template: `%s / iClothes`,
     default: APP_NAME,
   },
   description: APP_DESCRIPTION,

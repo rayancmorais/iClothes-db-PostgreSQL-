@@ -18,8 +18,24 @@ export function formatNumberWithDecimal(num: number): string {
   return decimal ? `${int}.${decimal.padEnd(2, "0")}` : `${int}.00`;
 }
 
-// const NUMBER_FORMATTER = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
- 
-// function formatNumberWithDecimal(num) {
-//   return NUMBER_FORMATTER.format(num);
-// }
+//format errors
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function formatError(error: any) {
+  if (error.name === "ZodError") {
+    const fieldErrors = Object.keys(error.erros).map(
+      (field) => error.errors[field].message
+    );
+    return fieldErrors.join(". ");
+  } else if (
+    error.name === "PrismaClientKnownRequestError" &&
+    error.code === "P2002"
+  ) {
+    const field = error.meta?.target ? error.meta.target[0] : "Field";
+    return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
+  } else {
+    //handle other errors
+    return typeof error.message === "string"
+      ? error.message
+      : JSON.stringify(error.message);
+  }
+}

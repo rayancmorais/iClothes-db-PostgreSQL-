@@ -15,11 +15,13 @@ const SignUpForm = () => {
     success: false,
     message: "",
   });
+
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const SignUpButton = () => {
     const { pending } = useFormStatus();
+
     return (
       <Button disabled={pending} className="w-full" variant="default">
         {pending ? "Submitting..." : "Sign Up"}
@@ -32,7 +34,7 @@ const SignUpForm = () => {
       <input type="hidden" name="callbackUrl" value={callbackUrl} />
       <div className="space-y-6">
         <div>
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="email">Name</Label>
           <Input
             id="name"
             name="name"
@@ -63,7 +65,7 @@ const SignUpForm = () => {
           />
         </div>
         <div>
-          <Label htmlFor="confirmPassword"> Confirm Password</Label>
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
           <Input
             id="confirmPassword"
             name="confirmPassword"
@@ -80,6 +82,7 @@ const SignUpForm = () => {
         {data && !data.success && (
           <div className="text-center text-destructive">{data.message}</div>
         )}
+
         <div className="text-sm text-center text-muted-foreground">
           Already have an account?{" "}
           <Link href="/sign-in" target="_self" className="link">

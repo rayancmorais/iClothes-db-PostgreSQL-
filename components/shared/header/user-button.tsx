@@ -8,11 +8,12 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { UserIcon } from "lucide-react";
 
 const UserButton = async () => {
   const session = await auth();
+
   if (!session) {
     return (
       <Button asChild>
@@ -22,6 +23,7 @@ const UserButton = async () => {
       </Button>
     );
   }
+
   const firstInitial = session.user?.name?.charAt(0).toUpperCase() ?? "U";
 
   return (
@@ -37,8 +39,7 @@ const UserButton = async () => {
             </Button>
           </div>
         </DropdownMenuTrigger>
-        {/* forceMount */}
-        <DropdownMenuContent className="w-56" align="end"> 
+        <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
               <div className="text-sm font-medium leading-none">
@@ -49,7 +50,6 @@ const UserButton = async () => {
               </div>
             </div>
           </DropdownMenuLabel>
-
           <DropdownMenuItem>
             <Link href="/user/profile" className="w-full">
               User Profile
@@ -60,13 +60,14 @@ const UserButton = async () => {
               Order History
             </Link>
           </DropdownMenuItem>
-
-          <DropdownMenuItem>
-            <Link href="/admin/overview" className="w-full">
-              Admin
-            </Link>
-          </DropdownMenuItem>
-
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          {(session?.user as any).role === "admin" && (
+            <DropdownMenuItem>
+              <Link href="/admin/overview" className="w-full">
+                Admin
+              </Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem className="p-0 mb-1">
             <form action={signOutUser} className="w-full">
               <Button

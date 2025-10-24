@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import NextAuth from "next-auth";
+import { authConfig } from "./auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/db/prisma";
-import CredentialsProvider from "next-auth/providers/credentials";
 import { cookies } from "next/headers";
-import { authConfig } from "./auth.config";
+import { compare } from "bcrypt-ts-edge";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { NextResponse } from "next/server";
 
 export const config = {
   pages: {
@@ -14,7 +15,7 @@ export const config = {
   },
   session: {
     strategy: "jwt" as const,
-    maxAge: 30 * 24 * 60, //lasts 30days
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -24,24 +25,23 @@ export const config = {
         password: { type: "password" },
       },
       async authorize(credentials) {
-        console.log({ credentials });
         if (credentials == null) return null;
 
-        //find user in database
+        // Find user in database
         const user = await prisma.user.findFirst({
           where: {
             email: credentials.email as string,
           },
         });
-        //Check if user exists and if password matches
-        if (user && user.password) {
-          // const isMatch = compareSync(
-          //   credentials.password as string,
-          //   user.password
-          // );
-          const isMatch = user.password === credentials.password;
 
-          // if password is correct, return user
+        // Check if user exists and if the password matches
+        if (user && user.password) {
+          const isMatch = await compare(
+            credentials.password as string,
+            user.password
+          );
+
+          // If password is correct, return user
           if (isMatch) {
             return {
               id: user.id,
@@ -51,7 +51,7 @@ export const config = {
             };
           }
         }
-        // if the user doenst exist or password doesnt match return null
+        // If user does not exist or password does not match return null
         return null;
       },
     }),
@@ -119,6 +119,38 @@ export const config = {
       }
 
       return token;
+    },
+    authorized({ request, auth }: any) {
+      //Array of regex pattern of paths to be protected
+      const protectedPaths = [
+        /\/shipping-address/,
+        /\/payment-method/,
+        /\/place-order/,
+        /\/profile/,
+        /\/user\/(.*)/,
+        /\/order\/(.*)/,
+        /\/admin/,
+      ];
+      //Get pathname from the req URL obj
+      const { pathname } = request.nextUrl;
+
+      //Check if user is not authenticated and accessing a protected path
+      if (!auth && protectedPaths.some((p) => p.test(pathname))) return false;
+
+      //Check for session cart cookie
+      if (!request.cookies.get("sessionCartId")) {
+        //Generate new session cart id cookie
+        const sessionCartId = crypto.randomUUID();
+        //Clone the req headers
+        const newRequestHeader = new Headers(request.headers);
+        //Create new response and add the new headers
+        const response = NextResponse.next({
+          request: {
+            headers: newRequestHeader,
+          },
+        });
+        response.cookies.set("sessionCartId", sessionCartId);
+      }
     },
   },
 };

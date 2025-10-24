@@ -15,7 +15,21 @@ export const signInDefaultValues = {
 
 export const signUpDefaultValues = {
   name: "",
-  email: "", //put test email after production
+  email: "", //put test email for production only
   password: "",
   confirmPassword: "",
 };
+
+export const shippingAddressDefaultValues = {
+  fullName: "",
+  streetAdress: "", //fill in the string only for production
+  city: "",
+  postalCode: "",
+  country: "",
+};
+
+export const PAYMENT_METHODS = process.env.PAYMENT_METHODS
+  ? process.env.PAYMENT_METHODS.split(", ")
+  : ["PayPal", "Stripe", "CashOnDelivery"];
+export const DEFAULT_PAYMENT_METHOD =
+  process.env.DEFAULT_PAYMENT_METHOD || "PayPal";

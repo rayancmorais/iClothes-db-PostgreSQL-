@@ -18,8 +18,6 @@ const AddToCart = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
     startTransition(async () => {
       const res = await addItemToCart(item);
 
-      console.log({ res });
-
       if (!res.success) {
         toast({
           variant: "destructive",
@@ -61,8 +59,6 @@ const AddToCart = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
   // Check if item is in cart
   const existItem =
     cart && cart.items.find((x) => x.productId === item.productId);
-
-  console.log({ existItem, cart });
 
   return existItem ? (
     <div>

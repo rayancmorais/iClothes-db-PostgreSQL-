@@ -48,8 +48,9 @@ const SignInPage = async (props: {
             Sign in to your account
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4"></CardContent>
-        <CredentialsSignInForm />
+        <CardContent className="space-y-4">
+          <CredentialsSignInForm />
+        </CardContent>
       </Card>
     </div>
   );

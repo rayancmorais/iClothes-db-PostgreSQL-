@@ -1,5 +1,5 @@
 import CartTable from "./cart-table"; //export default
-import { getMyCart } from "@/lib/actions/cart.actions"; //export const or func
+import { getMyCart } from "@/lib/actions/cart.actions"; //export const or func or lib
 export const metadata = {
   title: "Shopping Cart",
 };

@@ -14,18 +14,18 @@ export const signInDefaultValues = {
 };
 
 export const signUpDefaultValues = {
-  name: "",
-  email: "", //put test email for production only
+  name: "Rayan Morais",
+  email: "admin@example.com", //put test email for production only
   password: "",
   confirmPassword: "",
 };
 
 export const shippingAddressDefaultValues = {
-  fullName: "",
-  streetAdress: "", //fill in the string only for production
-  city: "",
-  postalCode: "",
-  country: "",
+  fullName: "Rayan Morais",
+  streetAdress: "Av Eng. Valdir Pedro Monachesi", //fill in the string only for production
+  city: "Juiz de Fora - MG",
+  postalCode: "36038-230",
+  country: "Brazil",
 };
 
 export const PAYMENT_METHODS = process.env.PAYMENT_METHODS

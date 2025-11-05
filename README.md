@@ -129,7 +129,7 @@ The following scripts are available in the `package.json` for development, build
 
 # ⚖️ Copyright and Licensing
 
-**Copyright (c) 2024 Rayan C. Morais. All rights reserved.**
+**Copyright (c) 2025 Rayan C. Morais. All rights reserved.**
 
 The source code for **iClothes** is the proprietary work of **Rayan C. Morais**.  
 Unauthorized copying, modification, redistribution, or use of the source code — in whole or in part — without express written permission from the copyright holder is **strictly prohibited**.

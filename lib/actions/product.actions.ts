@@ -76,7 +76,7 @@ export async function getAllProducts({
         }
       : {};
 
-  // Rating filter
+  // Rating filterr
   const ratingFilter =
     rating && rating !== "all"
       ? {

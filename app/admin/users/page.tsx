@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Pagination from "@/components/shared/pagination";
 import { Badge } from "@/components/ui/badge";
-import DeleteDialog from '@/components/shared/delete-dialog';
+import DeleteDialog from "@/components/shared/delete-dialog";
 import { requireAdmin } from "@/lib/auth-guard";
 
 export const metadata: Metadata = {

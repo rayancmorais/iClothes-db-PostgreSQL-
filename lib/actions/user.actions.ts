@@ -13,11 +13,11 @@ import { hashSync } from "bcrypt-ts-edge";
 import { prisma } from "@/db/prisma";
 import { formatError } from "../utils";
 import { ShippingAddress } from "@/types";
-import { getMyCart } from "./cart.actions";
-import z from "zod";
+import { z } from "zod";
 import { PAGE_SIZE } from "../constants";
-import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
+import { getMyCart } from "./cart.actions";
 
 // Sign in the user with credentials
 export async function signInWithCredentials(
@@ -45,12 +45,16 @@ export async function signInWithCredentials(
 export async function signOutUser() {
   // get current users cart and delete it so it does not persist to next user
   const currentCart = await getMyCart();
-  await prisma.cart.delete({ where: { id: currentCart?.id } });
+
+  if (currentCart?.id) {
+    await prisma.cart.delete({ where: { id: currentCart.id } });
+  } else {
+    console.warn("No cart found for deletion.");
+  }
   await signOut();
 }
 
-//Sign up user
-
+// Sign up user
 export async function signUpUser(prevState: unknown, formData: FormData) {
   try {
     const user = signUpFormSchema.parse({
@@ -59,8 +63,11 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
       password: formData.get("password"),
       confirmPassword: formData.get("confirmPassword"),
     });
+
     const plainPassword = user.password;
+
     user.password = hashSync(user.password, 10);
+
     await prisma.user.create({
       data: {
         name: user.name,
@@ -68,10 +75,12 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
         password: user.password,
       },
     });
+
     await signIn("credentials", {
       email: user.email,
       password: plainPassword,
     });
+
     return { success: true, message: "User registered successfully" };
   } catch (error) {
     if (isRedirectError(error)) {
@@ -81,14 +90,16 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
   }
 }
 
-//Get user by id
+// Get user by the ID
 export async function getUserById(userId: string) {
-  const user = await prisma.user.findFirst({ where: { id: userId } }); //fetch user
+  const user = await prisma.user.findFirst({
+    where: { id: userId },
+  });
   if (!user) throw new Error("User not found");
   return user;
 }
 
-//Update the user's address
+// Update the user's address
 export async function updateUserAddress(data: ShippingAddress) {
   try {
     const session = await auth();
@@ -106,7 +117,10 @@ export async function updateUserAddress(data: ShippingAddress) {
       data: { address },
     });
 
-    return { success: true, message: "User updated successfully" };
+    return {
+      success: true,
+      message: "User updated successfully",
+    };
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
@@ -140,8 +154,7 @@ export async function updateUserPaymentMethod(
   }
 }
 
-// Update the user profile ... if I want more options i need to add on the updateProfile func
-
+// Update the user profile
 export async function updateProfile(user: { name: string; email: string }) {
   try {
     const session = await auth();
